@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Weather Predictor | India AI</title>
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --success-color: #28a745;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text-color: #333;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column; /* Stack container and footer */
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container { 
+            width: 100%;
+            max-width: 400px; 
+            background: white; 
+            padding: 25px; 
+            border-radius: 16px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1); 
+            box-sizing: border-box;
+        }
+
+        h2 { 
+            margin-top: 0; 
+            text-align: center; 
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select { 
+            width: 100%; 
+            padding: 14px; 
+            border: 2px solid #f0f0f0; 
+            border-radius: 10px; 
+            box-sizing: border-box; 
+            font-size: 16px; /* Prevents iOS auto-zoom on focus */
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #fff;
+            box-shadow: 0 0 8px rgba(74, 144, 226, 0.2);
+        }
+
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background-color: var(--success-color); 
+            color: white; 
+            border: none; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            font-size: 1rem; 
+            font-weight: bold;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+        }
+
+        button:hover { 
+            background-color: #218838;
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .result { 
+            margin-top: 25px; 
+            padding: 20px; 
+            background-color: #f0f7ff; 
+            border-radius: 12px;
+            border: 1px solid #d0e3ff;
+            text-align: center;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .result-val {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin-top: 5px;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: #777;
+            text-align: center;
+        }
+
+        /* Mobile Specific Adjustments */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                border-radius: 12px;
+            }
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Max Temp Predictor</h2>
+    
+    <form action="/predict" method="post" id="predictForm">
+        <div class="form-group">
+            <label for="temp_min">Min Temperature (°C)</label>
+            <input type="number" step="0.1" id="temp_min" name="temp_min" placeholder="e.g. 12.5" required>
+        </div>
+
+        <div class="form-group">
+            <label for="wind">Wind Speed (km/h)</label>
+            <input type="number" step="0.1" id="wind" name="wind" placeholder="e.g. 4.2" required>
+        </div>
+
+        <div class="form-group">
+            <label for="weather">Weather Condition</label>
+            <select name="weather" id="weather">
+                {% for option in weather_options %}
+                    <option value="{{ option }}">{{ option|capitalize }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" id="submitBtn">Generate Prediction</button>
+    </form>
+
+    {% if prediction %}
+    <div class="result">
+        <strong>Estimated Max Temp</strong>
+        <span class="result-val">{{ prediction }}°C</span>
+    </div>
+    {% endif %}
+</div>
+
+<footer>
+    &copy; 2026 India AI. All rights reserved.
+</footer>
+
+<script>
+    const form = document.getElementById('predictForm');
+    const btn = document.getElementById('submitBtn');
+
+    form.onsubmit = function() {
+        btn.innerText = "Processing...";
+        btn.style.opacity = "0.8";
+    };
+</script>
+
+</body>
+</html>
